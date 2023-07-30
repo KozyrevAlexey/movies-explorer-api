@@ -9,34 +9,10 @@ const ErrorValidation = require('../errors/errorValidation');
 const ErrorNotFound = require('../errors/errorNotFound');
 const { JWT_SECRET, NODE_ENV } = require('../utils/constant');
 
-const getUsers = (req, res, next) => {
-  User.find({})
-    .then((users) => res.send(users))
-    .catch(next);
-};
-
-const getUserBuId = (req, res, next) => {
-  User.findById(req.params.userId)
-    .then((user) => {
-      if (!user) {
-        throw new ErrorNotFound(`Пользователь не найден`);
-      } else {
-        next(res.send(user));
-      }
-    })
-    .catch((err) => {
-      if (err.name === "CastError") {
-        next(new ErrorValidation(`Переданные данные некорректны`));
-      } else {
-        next(err);
-      }
-    });
-};
-
 const createUser = (req, res, next) => {
-  const { name, about, avatar, email, password } = req.body;
+  const { name, email, password } = req.body;
   bcrypt.hash(password, 10)
-    .then((hashedPassword) => User.create({ name, about, avatar, email, password: hashedPassword }))
+    .then((hashedPassword) => User.create({ name, email, password: hashedPassword }))
     .then((user) => res.send(user.toJSON()))
     .catch((err) => {
       if (err.name === "ValidationError") {
@@ -63,20 +39,6 @@ const updateProfileUser = (req, res, next) => {
     })
 };
 
-const updateAvatarUser = (req, res, next) => {
-  const { avatar } = req.body;
-  const { _id } = req.user;
-  User.findByIdAndUpdate(_id, { avatar }, { new: true, runValidators: true })
-    .then((user) => res.send(user))
-    .catch((err) => {
-      if (err.name === "ValidationError") {
-        next(new ErrorValidation(`Переданные данные некорректны`));
-      } else {
-        next(err);
-      }
-    })
-}
-
 const login = (req, res, next) => {
   const { email, password } = req.body;
   User.findOne({ email })
@@ -101,15 +63,12 @@ const getUserInfo = (req, res, next) => {
   User.findById(req.user._id)
     .orFail(new ErrorNotFound('Нет пользователя с указанным id'))
     .then((user) => res.send(user))
-    .catch((err) => next(err));
+    .catch(next);
 }
 
 module.exports = {
   createUser,
-  getUserBuId,
-  getUsers,
   updateProfileUser,
-  updateAvatarUser,
   login,
   getUserInfo,
 };
