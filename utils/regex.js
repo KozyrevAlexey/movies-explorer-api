@@ -2,12 +2,6 @@ const { celebrate, Joi } = require('celebrate')
 
 const regex = /^(http|https):\/\/(?:www\.)?[a-zA-Z0-9._~\-:?#[\]@!$&'()*+,\/;=]{2,256}\.[a-zA-Z0-9.\/?#-]{2,}$/;
 
-const validateUserId = celebrate({
-  params: Joi.object().keys({
-    userId: Joi.string().length(24).hex().required(),
-  }),
-});
-
 const validateProfilUpdate = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
@@ -15,62 +9,48 @@ const validateProfilUpdate = celebrate({
   }),
 });
 
-const validateAvatarUpdate = celebrate({
-  body: Joi.object().keys({
-    avatar: Joi.string().pattern(regex).required(),
-  })
-});
-
-const validateCreateCard = celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30).required(),
-    link: Joi.string().pattern(regex).required(),
-  }),
-});
-
-const validateDeliteCardById = celebrate({
-  params: Joi.object().keys({
-    cardId: Joi.string().length(24).hex().required(),
-  }),
-});
-
-const validateDeliteLikeCard = celebrate({
-  params: Joi.object().keys({
-    cardId: Joi.string().length(24).hex().required(),
-  }),
-});
-
-const validatePutLikeCard = celebrate({
-  params: Joi.object().keys({
-    cardId: Joi.string().length(24).hex().required(),
-  })
-});
-
-const validateCreateUser = celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30).optional(),
-    about: Joi.string().min(2).max(30).optional(),
-    avatar: Joi.string().regex(regex).optional(),
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
-  })
-});
-
 const validateLogin = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required(),
   })
+});
+
+const validateMovieId = celebrate({
+  params: Joi.object().keys({
+    userId: Joi.string().length(24).hex().required(),
+  }),
+});
+
+const validateCreateUser = celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30).optional(),
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  })
+});
+
+const validateNewMovie = celebrate({
+  body: Joi.object().keys({
+    country: Joi.string().required(),
+    director: Joi.string().required(),
+    duration: Joi.number().required(),
+    year: Joi.string().required(),
+    description: Joi.string().required(),
+    image: Joi.string().required().pattern(regex),
+    trailerLink: Joi.string().required().pattern(regex),
+    nameRU: Joi.string().required(),
+    nameEN: Joi.string().required(),
+    thumbnail: Joi.string().required().pattern(regex),
+    movieId: Joi.number().required(),
+  })
 })
 
+
 module.exports = {
-  validateUserId,
   validateProfilUpdate,
-  validateAvatarUpdate,
-  validateCreateCard,
-  validateDeliteCardById,
-  validateDeliteLikeCard,
-  validatePutLikeCard,
-  validateCreateUser,
   validateLogin,
+  validateMovieId,
+  validateCreateUser,
+  validateNewMovie,
 };
