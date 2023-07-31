@@ -4,8 +4,9 @@ const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
 const cors = require('cors')
+const helmet = require('helmet')
+const rateLimiter = require('./middlewares/rateLimiter')
 const router = require('./routes');
-
 const errorsHandler = require('./middlewares/errorsHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { PORT, MONGO_DB } = require('./utils/constant');
@@ -21,6 +22,8 @@ app.use(cors({
 
 mongoose.connect(MONGO_DB);
 
+app.use(helmet());
+app.use(rateLimiter);
 app.use(router);
 app.use(errorLogger);
 app.use(errors());
