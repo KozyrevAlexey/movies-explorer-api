@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(requestLogger);
 app.use(cookieParser());
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001', 'https://kamesto.nomoreparties.sbs', 'http://kamesto.nomoreparties.sbs', 'https://api.kamesto.nomoreparties.sbs', 'http://api.kamesto.nomoreparties.sbs'],
+  origin: ['http://localhost:3000', 'http://localhost:3001', 'http://api.diplom.nomoreparties.co', 'https://api.diplom.nomoreparties.co'],
   credentials: true,
 }));
 
