@@ -10,4 +10,4 @@ module.exports = {
   MONGO_DB,
   JWT_SECRET,
   NODE_ENV,
-}
+};

@@ -1,7 +1,6 @@
-
 const bcrypt = require('bcryptjs');
 const jsonWebToken = require('jsonwebtoken');
-const User = require('../models/user')
+const User = require('../models/user');
 
 const ErrorAuth = require('../errors/errorAuth');
 const ErrorConflict = require('../errors/errorConflict');
@@ -15,28 +14,28 @@ const createUser = (req, res, next) => {
     .then((hashedPassword) => User.create({ name, email, password: hashedPassword }))
     .then((user) => res.send(user.toJSON()))
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        next(new ErrorValidation(`Переданные данные некорректны`));
+      if (err.name === 'ValidationError') {
+        next(new ErrorValidation('Переданные данные некорректны'));
       } else if (err.code === 11000) {
-        next(new ErrorConflict(`Такой e-mail уже зарегистрирован`));
+        next(new ErrorConflict('Такой e-mail уже зарегистрирован'));
       } else {
         next(err);
       }
     });
-}
+};
 
 const updateProfileUser = (req, res, next) => {
-  const { name, about } = req.body;
-  const { _id } = req.user;
-  User.findByIdAndUpdate(_id, { name, about }, { new: true, runValidators: true })
+  const { name, email } = req.body;
+  const owner = req.user._id;
+  User.findByIdAndUpdate(owner, { name, email }, { new: true, runValidators: true })
     .then((user) => res.send(user))
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        next(new ErrorValidation(`Переданные данные некорректны`));
+      if (err.name === 'ValidationError') {
+        next(new ErrorValidation('Переданные данные некорректны'));
       } else {
         next(err);
       }
-    })
+    });
 };
 
 const login = (req, res, next) => {
@@ -57,14 +56,14 @@ const login = (req, res, next) => {
         .catch(next);
     })
     .catch(next);
-}
+};
 
 const getUserInfo = (req, res, next) => {
   User.findById(req.user._id)
     .orFail(new ErrorNotFound('Нет пользователя с указанным id'))
     .then((user) => res.send(user))
     .catch(next);
-}
+};
 
 module.exports = {
   createUser,

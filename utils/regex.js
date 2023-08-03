@@ -1,11 +1,11 @@
-const { celebrate, Joi } = require('celebrate')
-
+const { celebrate, Joi } = require('celebrate');
+// eslint-disable-next-line no-useless-escape
 const regex = /^(http|https):\/\/(?:www\.)?[a-zA-Z0-9._~\-:?#[\]@!$&'()*+,\/;=]{2,256}\.[a-zA-Z0-9.\/?#-]{2,}$/;
 
 const validateProfilUpdate = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
-    about: Joi.string().min(2).max(30).required(),
+    email: Joi.string().required().email(),
   }),
 });
 
@@ -13,21 +13,21 @@ const validateLogin = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required(),
-  })
+  }),
 });
 
 const validateMovieId = celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().length(24).hex().required(),
+    movieId: Joi.string().length(24).hex().required(),
   }),
 });
 
 const validateCreateUser = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30).optional(),
+    name: Joi.string().min(2).max(30).required(),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
-  })
+  }),
 });
 
 const validateNewMovie = celebrate({
@@ -43,9 +43,8 @@ const validateNewMovie = celebrate({
     nameEN: Joi.string().required(),
     thumbnail: Joi.string().required().pattern(regex),
     movieId: Joi.number().required(),
-  })
-})
-
+  }),
+});
 
 module.exports = {
   validateProfilUpdate,

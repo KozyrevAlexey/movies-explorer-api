@@ -3,9 +3,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
-const cors = require('cors')
-const helmet = require('helmet')
-const rateLimiter = require('./middlewares/rateLimiter')
+const cors = require('cors');
+const helmet = require('helmet');
+const rateLimiter = require('./middlewares/rateLimiter');
 const router = require('./routes');
 const errorsHandler = require('./middlewares/errorsHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -30,5 +30,6 @@ app.use(errors());
 app.use(errorsHandler);
 
 app.listen(PORT, () => {
-  console.log(`Слушаю порт ${PORT}`)
+  // eslint-disable-next-line no-console
+  console.log(`Слушаю порт ${PORT}`);
 });

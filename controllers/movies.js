@@ -2,7 +2,7 @@ const Movie = require('../models/movie');
 
 const ErrorValidation = require('../errors/errorValidation');
 const ErrorNotFound = require('../errors/errorNotFound');
-const ErrorForbidden = require('../errors/errorForbidden.js');
+const ErrorForbidden = require('../errors/errorForbidden');
 
 const getMovies = (req, res, next) => {
   const owner = req.user._id;
@@ -42,24 +42,24 @@ const createMovie = (req, res, next) => {
   })
     .then((movies) => res.send(movies))
     .catch((err) => {
-      if (err.name = "ValidationError") {
-        next(new ErrorValidation(`Переданные данные некорректны`));
+      if (err.name === 'ValidationError') {
+        next(new ErrorValidation('Переданные данные некорректны'));
       } else {
         next(err);
       }
     });
-}
+};
 
 const deliteMovieById = (req, res, next) => {
   Movie.findById(req.params._id)
-    .orFail(() => new ErrorNotFound(`Карточка для удаления не найдена`))
+    .orFail(() => new ErrorNotFound('Карточка для удаления не найдена'))
     .then((movie) => {
       if (movie.owner.toString() === req.user._id) {
         Movie.deleteOne(movie)
           .then(() => res.send({ data: movie }))
-          .catch(next)
+          .catch(next);
       } else {
-        throw new ErrorForbidden('Чужую карточку удалить нельзя')
+        throw new ErrorForbidden('Чужую карточку удалить нельзя');
       }
     })
     .catch(next);
